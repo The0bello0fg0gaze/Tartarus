@@ -6,8 +6,16 @@ local menubar = require("menubar")
 local global_keys ={}
 -- {{{ Key bindings
 global_keys.globalkeys = gears.table.join(
+	-- Music MPC using MPD daemon
+	awful.key({ }, "Prior", function ()awful.spawn("mpc prev") end,
+		{description = "toggle the MPC player", group = "launcher"}),
+	awful.key({ }, "Next", function ()awful.spawn("mpc next") end,
+		{description = "toggle the MPC player", group = "launcher"}),
+	awful.key({ }, "Home", function ()awful.spawn("mpc toggle") end,
+		{description = "toggle the MPC player", group = "launcher"}),
+	
 	-- web camera
-	awful.key({ modkey }, "p", function () awful.spawn.with_shell("guvcview & disown") end,
+	awful.key({ modkey, "Shift" }, "p", function () awful.spawn.with_shell("guvcview & disown") end,
 		{description = "start a webcam using guvcview", group = "launcher"}),
 	-- clipboard manager
 	awful.key({ modkey }, "/", function () awful.spawn.with_shell("rofi -modi 'clipboard:greenclip print' -show clipboard") end,

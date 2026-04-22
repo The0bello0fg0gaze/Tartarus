@@ -1,5 +1,6 @@
 -- If LuaRocks is installed, make sure that packages installed through it are
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
+-- In your rc.lua
 pcall(require, "luarocks.loader")
 require("awful.hotkeys_popup.keys")
 -- Standard awesome library
@@ -27,6 +28,9 @@ modkey = "Mod4"
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
+
+awful.spawn.with_shell("dbus-update-activation-environment --systemd DISPLAY XAUTHORITY")
+
 if awesome.startup_errors then
     naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Oops, there were errors during startup!",
@@ -71,59 +75,16 @@ root.buttons(gears.table.join(
 -- }}}
 
 -- The global keys
+-- {{{
 local global_keys = require( window_selected .. "key_bindings.globalKeys")
 local globalkeys = global_keys.globalkeys
 -- The client keys
 local client_keys = require( window_selected .. "key_bindings.clientKeys")
--- Bind all key numbers to tags.
--- Be careful: we use keycodes to make it work on any keyboard layout.
--- This should map on the top row of your keyboard, usually 1 to 9.
-for i = 1, 9 do
-    globalkeys = gears.table.join(globalkeys,
-	-- View tag only.
-        awful.key({ modkey,     }, "#" .. i + 9,
-                  function ()
-                        local screen = awful.screen.focused()
-                        local tag = screen.tags[i]
-                        if tag then
-                           tag:view_only()
-                        end
-                  end,
-                  {description = "view tag #"..i, group = "tag"}),
-        -- Toggle tag display.
-        awful.key({ modkey, "Control" }, "#" .. i + 9,
-                  function ()
-                      local screen = awful.screen.focused()
-                      local tag = screen.tags[i]
-                      if tag then
-                         awful.tag.viewtoggle(tag)
-                      end
-                  end,
-                  {description = "toggle tag #" .. i, group = "tag"}),
-        -- Move client to tag.
-        awful.key({ modkey, "Shift" }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = client.focus.screen.tags[i]
-                          if tag then
-                              client.focus:move_to_tag(tag)
-                          end
-                     end
-                  end,
-                  {description = "move focused client to tag #"..i, group = "tag"}),
-        -- Toggle tag on focused client.
-        awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = client.focus.screen.tags[i]
-                          if tag then
-                              client.focus:toggle_tag(tag)
-                          end
-                      end
-                  end,
-                  {description = "toggle focused client on tag #" .. i, group = "tag"})
-    )
-end
+-- }}}
+
+local mod_ctl = require( window_selected .. "key_bindings.windowsTab" )
+local globalkeys = mod_ctl.run(globalkeys,modkey)
+
 
 clientbuttons = gears.table.join(
     awful.button({ }, 1, function (c)
