@@ -51,7 +51,7 @@ function InfoBar.spawn(beautiful)
 				layout = wibox.layout.fixed.vertical,
 			    	spacing = 5, -- Adds a small gap between the text and the clock
 			    {
-				text   = "TAKE CONTROLL",
+				text   = "TAKE CONTROLL",  -- Custome Text you want but adjust values of width and height in s.center_overlay for proper display
 				font   = "Impact bold 34", -- Slightly smaller than the clock
 				align  = "center",
 				valign = "center",
